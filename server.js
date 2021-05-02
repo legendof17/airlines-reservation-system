@@ -1,28 +1,14 @@
 const express = require('express');
-const mysql = require('mysql');
 const config = require('config');
 
-const app = express();
+const flight_list = require('./routes/api/flight_list')
 
+// Middlewares
+const app = express();
 app.use(express.json());
 
-const dbdetails = config.get('db');
-
-const db = mysql.createPool(dbdetails);
-
-app.get('/api/aircraft_list', (req, res) => {
-    const getlist = "SELECT * FROM aircraft_list;"
-    db.query(getlist, (err, result) => {
-        res.send(result);
-    })
-})
-
-app.get('/api/aircraft_list/:id', (req, res) => {
-    const getlist = `SELECT * FROM aircraft_list where aircraft_id=${req.params.id};`
-    db.query(getlist, (err, result) => {
-        res.send(result);
-    })
-})
+// Use routes
+app.use('/api/flight_list', flight_list)
 
 const port = config.get('app.port') || process.env.port;
 
